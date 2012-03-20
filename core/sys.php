@@ -21,15 +21,15 @@ class sys
 		sys::$log[0]['microtime'] = BENCHMARK_START;
 		
 		
-		sys::$lib   = new stdClass();
-		sys::$ext   = new stdClass();
-		sys::$com   = new stdClass();
+		sys::$lib = new stdClass();
+		sys::$ext = new stdClass();
+		sys::$com = new stdClass();
 		sys::$model = new stdClass();
-		
 		
 		spl_autoload_register('sys::_autoload');
 		set_error_handler('sys::_php_error');
-		
+	
+
 		if (@get_magic_quotes_gpc())
 		{
 			function _stripslashes_deep($value)
@@ -47,23 +47,6 @@ class sys
 	
 	//--------------------------------------------------------------------------
 	
-	public function post_config_init()
-	{
-		if ( ! empty(sys::$config->sys->encoding))
-		{
-			mb_internal_encoding(sys::$config->sys->encoding);
-		}
-		
-		if ( ! empty(sys::$config->sys->timezone))
-		{
-			date_default_timezone_set(sys::$config->sys->timezone);
-		}
-		
-		
-	}
-	
-	//--------------------------------------------------------------------------
-	
 	public static function load_config($name)
 	{
 		static $config;
@@ -75,7 +58,7 @@ class sys
 			$config = new stdClass();
 			sys::$config =& $config;
 		}
-		
+
 		$file = sys::validate_file(APP_PATH . 'configs/' . $name . EXT, TRUE);
 		
 		require_once $file;
@@ -327,13 +310,15 @@ class sys
 			return;
 		}
 		
-		$file = str_replace(ROOT_PATH, '', $file);
+		ob_get_level() && ob_clean();
 		
-		sys::log("{$message}<br>File: {$file} (Line: {$line})", SYS_PHP, $severity);
+		$file = str_replace(ROOT_PATH, '%ROOT%/', $file);
 		
-		if (FF_DEBUG || FF_DEVMODE) echo "<div style='background:#FEE;border:2px solid #C33; padding:3px; margin:5px; font:normal 11px \"Trebuchet MS\",sans-serif'><b>PHP ERROR:</b> {$message}<br>{$file} (Line: {$line})</div>";
+//		sys::log("File: {$message}<br>{$file} (Line: {$line})", SYS_PHP, $severity);
 		
-//		exit;
+		echo "<pre><b>PHP ERROR:</b> {$message}<br>{$file} (Line: {$line})</pre>";
+		
+		exit;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -383,11 +368,7 @@ class sys
 				$folder = 'helpers/' . strtolower($class) . HELPER_EXT;
 				$path   = SYS_PATH;
 				break;
-				
-			case $path == EXT_PATH;
-				$folder = strtolower($class) . EXTENSION_EXT;
-				break;
-				
+			
 			default:
 				$folder = 'libraries/' . strtolower($class) . EXT;
 		}
