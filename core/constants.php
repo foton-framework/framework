@@ -2,8 +2,8 @@
 
 //--------------------------------------------------------------------------
 
-define('FOTON_VERSION', '0.2');
-define('FOTON_VERSION_STATUS', 'beta');
+define('FOTON_VERSION', '0.3');
+define('FOTON_VERSION_STATUS', '');
 
 //--------------------------------------------------------------------------
 //   Log levels
@@ -16,12 +16,18 @@ define('SYS_USER'  , 8);
 
 //--------------------------------------------------------------------------
 
+define('ON' , TRUE);
+define('OFF', FALSE);
+define('YES', TRUE);
+define('NO' , FALSE);
+
+//--------------------------------------------------------------------------
+
 define('SYSTEM_CLASS_PREFIX'   , 'SYS_');
 define('COMPONENT_CLASS_PREFIX', 'COM_');
 define('MODEL_CLASS_PREFIX'    , 'MODEL_');
 define('EXTENSION_CLASS_PREFIX', 'EXT_');
 define('HELPER_CLASS_PREFIX'   , 'h_');
-
 
 //--------------------------------------------------------------------------
 
