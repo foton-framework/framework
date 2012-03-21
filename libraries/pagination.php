@@ -12,10 +12,13 @@ class SYS_Pagination
 	
 	public function init($total, $items = 10, $url = NULL, $link = 'page_?.html')
 	{
+		$this->set_opt('_end_slash', '');
+		
 		if (is_array($total))
 		{
 			$conf =& $total;
 			if (isset($conf['group'])) $this->set_group($conf['group']);
+			$this->set_opt('_end_slash', '/');
 			foreach ($conf as $key => $opt) $this->set_opt($key, $opt);
 		}
 		else
@@ -49,7 +52,7 @@ class SYS_Pagination
 		if ($cur_page > $pages) hlp::redirect('/' . $this->opt('url'));
 		
 		$tpl      = $this->default_template();
-		$link_tpl = str_replace('?', '%d', '/' . $this->opt('url') . $this->opt('link'));
+		$link_tpl = str_replace('?', '%d', '/' . $this->opt('url') . $this->opt('link') . $this->opt('_end_slash'));
 		
 		if ($pages < 2) return;
 		
