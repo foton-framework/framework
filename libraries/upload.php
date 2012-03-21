@@ -5,7 +5,7 @@ class SYS_Upload
 {
 	public $upload_path  = '';
 	public $file_name     = '';
-	public $allowed_types = '';
+	public $allowed_types = '';  // Divider: |
 	public $max_size      = 1;
 
 	public $errors     = array();
@@ -103,7 +103,14 @@ class SYS_Upload
 		'xl'	=>	'application/excel',
 		'eml'	=>	'message/rfc822'
 	);
-
+	
+	//--------------------------------------------------------------------------
+	
+	public function __construct()
+	{
+		sys::set_config_items(&$this, 'upload');
+	}
+	
 	//--------------------------------------------------------------------------
 	
 	public function init($opt)
@@ -169,9 +176,9 @@ class SYS_Upload
 
 	public function reset()
 	{
-		$this->upload_path   = '';
-		$this->allowed_types = '';
-		$this->max_size      = 1;
+//		$this->upload_path   = '';
+//		$this->allowed_types = '';
+//		$this->max_size      = 1;
 
 		$this->file_data = array();
 		//$this->errors    = array();
