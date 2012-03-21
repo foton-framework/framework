@@ -211,6 +211,7 @@ class SYS_Form
 		{
 			case 'select':
 			case 'multiselect':
+			case 'multicheckbox':
 			case 'radiogroup':
 			case 'checkboxgroup':
 				return h_form::$type($field, $this->options($field), $this->value($field), $this->extra($field));
