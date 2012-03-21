@@ -223,7 +223,7 @@ class SYS_Form
 				$this->set_extra($field, "id='ckfield_{$field}'");
 				return h_form::textarea($field, $this->value($field), $this->extra($field))
 					. "<script type='text/javascript'>
-					CKEDITOR.replace('ckfield_{$field}', {language:'ru', filebrowserUploadUrl: '/admin/uploader', contentsCss : '/res/css/main.css'});
+					CKEDITOR.replace('ckfield_{$field}');
 					</script>";
 				break;
 			default:
