@@ -91,7 +91,7 @@ class h_form
 	{
 		if ($extra) $extra = ' ' . $extra;
 		$radiogroup = '';
-		
+
 		foreach ($options_list as $value => $title)
 		{
 			$selected = $selectedvalue == $value ? ' checked="checked"' : '';
@@ -167,7 +167,7 @@ class h_form
 	public static function select($name, $options_list, $selectedvalue = NULL, $extra = '')
 	{
 		$options = '';
-
+		
 		foreach ($options_list as $value => $title)
 		{
 			if (is_array($title))
@@ -176,9 +176,9 @@ class h_form
 				
 				foreach($title as $val => $t)
 				{
-					is_array($selectedvalue)
-						? ($selected = in_array($value, $selectedvalue) ? ' selected' : '')
-						: ($selected = $selectedvalue == $value ? ' selected' : '');
+					$selected = is_array($selectedvalue)
+						? (in_array($val, $selectedvalue) ? ' selected' : '')
+						: ($selectedvalue == $val ? ' selected="selected"' : '');
 					$options .= "<option value='{$val}'{$selected}>{$t}</option>";
 				}
 			}
@@ -201,6 +201,24 @@ class h_form
 	{
 		$extra = "multiple='multiple'" . ($extra ? ' ' . $extra : '');
 		return self::select($name . '[]', $options, $selectedvalues, $extra);
+	}
+	
+	//--------------------------------------------------------------------------
+
+	public static function multicheckbox($name, $options, $selectedvalues = NULL, $extra = '')
+	{
+		if ($extra) $extra = ' ' . $extra;
+		$html = '';
+		$selectedvalues = (array)$selectedvalues;
+		foreach ($options as $value => $title)
+		{
+			if ( ! $value) continue;
+			$selected = in_array($value, $selectedvalues) ? ' checked="checked"' : '';
+			$html .= "<div><label class=\"checkbox_label\"><input type='checkbox' style='width:auto' name='{$name}[]' value='{$value}'{$selected}{$extra} /> {$title}</label></div>";
+		}
+		
+		
+		return '<div class="multicheckbox">' . $html . '</div>';
 	}
 	
 	//--------------------------------------------------------------------------
