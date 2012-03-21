@@ -49,7 +49,7 @@ class SYS_Pagination
 		if ( ! $items) $items = 10;
 		$pages    = ceil($total / $items);
 		
-		if ($cur_page > $pages) hlp::redirect('/' . $this->opt('url'));
+		if ($cur_page != 1 && $cur_page > $pages) hlp::redirect('/' . $this->opt('url'));
 		
 		$tpl      = $this->default_template();
 		$link_tpl = str_replace('?', '%d', '/' . $this->opt('url') . $this->opt('link') . $this->opt('_end_slash'));
