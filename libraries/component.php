@@ -49,20 +49,21 @@ class SYS_Component
 				$method_result = call_user_func_array(array(&$this, $action_method), $arguments);
 				break;
 			
+			case ! $main_component && $method && method_exists(&$this, $method):
+				$method_result = call_user_func_array(array(&$this, $method), $arguments);
+				break;
+			
 			case method_exists(&$this, 'router'):
 				$this->set_view(FALSE);
 				$arguments     = array_merge((array)$method, $arguments);
 				$method_result = call_user_func_array(array(&$this, 'router'), $arguments);
 				break;
-			
-			case ! $main_component:
-				return sys::error('METHOD_NOT_FOUND', array('method'=>$action_method, 'component'=>get_class(&$this)));
-				break;
 		}
 		
 		if ($method_result !== NULL && ! $method_result)
 		{
-			sys::error_404();
+			if ($main_component) sys::error_404();
+			echo "METHOD_NOT_FOUND: {$action_method}; component: " . get_class(&$this);
 			return;
 		}
 		
