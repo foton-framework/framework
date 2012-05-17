@@ -143,6 +143,15 @@ class SYS_Database_Active extends SYS_Database
 	
 	//--------------------------------------------------------------------------
 
+	public function &where_not_in($field, $params = array())
+	{
+		foreach ($params as &$val) $val = $this->escape($val);
+		$this->_sql['where'] .= ($this->_sql['where'] ? ' AND ' : '') . $field . ' NOT IN ("' . implode('","', $params) . '")';
+		return $this;
+	}
+
+	//--------------------------------------------------------------------------
+
 	public function &group_by($field)
 	{
 		if ($this->_sql['group_by'])
