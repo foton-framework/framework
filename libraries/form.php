@@ -47,7 +47,9 @@ class SYS_Form
 		'alpha_dash'    => 'Поле %s может содержать только символы алфавита и цифры, подчеркивания и тире.',
 		'integer'       => 'Поле %s должно содержать целое число.',
 		'numeric'       => 'Поле %s должно содержать только цифры.',
-		'callback'      => 'Callback error'
+		'callback'      => 'Callback error',
+		'translit'      => 'Translit error',
+		'unique'        => 'Значение поля %s не уникально!',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -349,7 +351,7 @@ class SYS_Form
 			if (method_exists(&$this, $rule_method))
 			{
 				$rule_method = 'r_' . $rule;
-				$result = $this->$rule_method(&$value, $rule_opt);
+				$result = $this->$rule_method(&$value, $rule_opt, $field);
 				
 				if ( ! $result)
 				{
@@ -582,28 +584,28 @@ class SYS_Form
 	
 	public function r_alpha($val, $opt)
 	{
-		return $val == '' ? TRUE : preg_match('/^[a-z]+$/i', $val);
+		return $val == '' ? TRUE : preg_match('/^[a-z]+$/ui', $val);
 	}
 	
 	//--------------------------------------------------------------------------
 	
 	public function r_alpha_numeric($val, $opt)
 	{
-		return $val == '' ? TRUE : preg_match('/^[0-9]+$/i', $val);
+		return $val == '' ? TRUE : preg_match('/^[A-Za-z0-9]+$/ui', $val);
 	}
 	
 	//--------------------------------------------------------------------------
 	
 	public function r_alpha_dash($val, $opt)
 	{
-		return $val == '' ? TRUE : preg_match('/^[-_a-z0-9]+$/i', $val);
+		return $val == '' ? TRUE : preg_match('/^[-_A-Za-z0-9]+$/ui', $val);
 	}
 	
 	//--------------------------------------------------------------------------
 	
 	public function r_integer($val, $opt)
 	{
-		return $val == '' ? TRUE : preg_match('/^[0-9]+$/i', $val);
+		return $val == '' ? TRUE : preg_match('/^[0-9]+$/ui', $val);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -630,6 +632,37 @@ class SYS_Form
 	
 	//--------------------------------------------------------------------------
 	
+	public function r_translit($val, $opt, $field)
+	{
+		if ($val)
+		{
+			return h_common::translit($val);
+		}
+		
+		// Нечего обрабатывать
+		if ( empty($opt[0]) || empty($_POST[$opt[0]]))
+		{
+			return TRUE;
+		}
+		
+		return h_common::translit($_POST[$opt[0]]);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function r_unique($val, $opt, $field)
+	{
+		if (empty($opt[0]))
+		{
+			$this->set_error_message("unique", "Table name not set. Use attr: <b>unique[tablename]</b>");
+			return FALSE;
+		}
+
+		return (bool)!sys::$lib->db->where("{$field}=?", $val)->count_all($opt[0]);
+	}
+
+	//--------------------------------------------------------------------------
+
 	public function r_callback($val, $opt)
 	{
 		$args = '$val';
