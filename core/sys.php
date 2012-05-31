@@ -151,6 +151,34 @@ class sys
 	
 	//--------------------------------------------------------------------------
 	
+	//TODO: переделать eval() на call_user_func_array()
+	//функция пока нигде не используется, можно и переделать...
+	public static function call($cmd, $args = array())
+	{
+		$cmd = explode('.', $cmd);
+		
+		$eval_args = array();
+		foreach ($args as $i=>$val) $eval_args[$i] = '$args['.$i.']';
+		
+		switch ($cmd[0])
+		{
+			case 'com':
+				if ( ! isset(sys::$com->$cmd[1])) sys::$lib->load->component($cmd[1]);
+				break;
+			
+			case 'ext':
+				if ( ! isset(sys::$ext->$cmd[1])) sys::$lib->load->extension($cmd[1]);
+				break;
+				
+			case 'model':
+				if ( ! isset(sys::$model->$cmd[1])) sys::$lib->load->model($cmd[1]);
+				break;	
+		}
+		eval('return sys::$' . implode('->', $cmd) . '(' . implode(', ', $eval_args) . ');');
+	}
+	
+	//--------------------------------------------------------------------------
+	
 	public static function set_base_objects(&$object, $object_name = FALSE)
 	{
 		static $base_objects = array();
