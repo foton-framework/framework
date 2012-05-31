@@ -657,7 +657,10 @@ class SYS_Form
 			$this->set_error_message("unique", "Table name not set. Use attr: <b>unique[tablename]</b>");
 			return FALSE;
 		}
-
+		if (($id = $this->value('id')))
+		{
+			sys::$lib->db->where('id!=?', $id);
+		}
 		return (bool)!sys::$lib->db->where("{$field}=?", $val)->count_all($opt[0]);
 	}
 
