@@ -174,7 +174,7 @@ class sys
 				if ( ! isset(sys::$model->$cmd[1])) sys::$lib->load->model($cmd[1]);
 				break;	
 		}
-		eval('return sys::$' . implode('->', $cmd) . '(' . implode(', ', $eval_args) . ');');
+		return eval('return sys::$' . implode('->', $cmd) . '(' . implode(', ', $eval_args) . ');');
 	}
 	
 	//--------------------------------------------------------------------------
