@@ -152,7 +152,6 @@ class sys
 	//--------------------------------------------------------------------------
 	
 	//TODO: переделать eval() на call_user_func_array()
-	//функция пока нигде не используется, можно и переделать...
 	public static function call($cmd, $args = array())
 	{
 		$cmd = explode('.', $cmd);

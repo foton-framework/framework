@@ -209,6 +209,15 @@ class SYS_Form
 		
 		$args = func_get_args();
 		
+		if (is_array($type))
+		{
+			if ( ! empty($type['callback']))
+			{
+				return sys::call($type['callback'], (isset($type['args']) ? $type['args'] : array()) );
+			}
+			return;
+		}
+		
 		switch ($type)
 		{
 			case 'select':
@@ -348,10 +357,10 @@ class SYS_Form
 			
 			// Form validation method
 			$rule_method = 'r_' . $rule;
-			if (method_exists(&$this, $rule_method))
+			if (method_exists($this, $rule_method))
 			{
 				$rule_method = 'r_' . $rule;
-				$result = $this->$rule_method(&$value, $rule_opt, $field);
+				$result = $this->$rule_method($value, $rule_opt, $field);
 				
 				if ( ! $result)
 				{
@@ -508,17 +517,17 @@ class SYS_Form
 
 		foreach ($this->fields[$this->group] as $field => $opt)
 		{
-			if ( ! $this->field($field)) continue;
+			if ( ! ($field_str = $this->field($field))) continue;
 			
 			if ($opt['type'] == 'hidden')
 			{
-				$result .= $this->field($field);
+				$result .= $field_str;
 			}
 			else
 			{
 				$result .= $this->_template('row',
 					$this->_template('label', $this->label($field)) . 
-					$this->_template('field', $this->field($field))
+					$this->_template('field', $field_str)
 				);
 			}
 		}
