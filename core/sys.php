@@ -58,8 +58,6 @@ class sys
 		{
 			date_default_timezone_set(sys::$config->sys->timezone);
 		}
-		
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -155,24 +153,30 @@ class sys
 	public static function call($cmd, $args = array())
 	{
 		$cmd = explode('.', $cmd);
-		
+		$obj = NULL;
 		$eval_args = array();
 		foreach ($args as $i=>$val) $eval_args[$i] = '$args['.$i.']';
 		
 		switch ($cmd[0])
 		{
 			case 'com':
-				if ( ! isset(sys::$com->$cmd[1])) sys::$lib->load->component($cmd[1]);
+				isset(sys::$com->$cmd[1]) ? $obj =& sys::$com->$cmd[1] : $obj =& sys::$lib->load->component($cmd[1]);
 				break;
 			
 			case 'ext':
-				if ( ! isset(sys::$ext->$cmd[1])) sys::$lib->load->extension($cmd[1]);
+				isset(sys::$ext->$cmd[1]) ? $obj =& sys::$ext->$cmd[1] : $obj =& sys::$lib->load->extension($cmd[1]);
 				break;
 				
 			case 'model':
-				if ( ! isset(sys::$model->$cmd[1])) sys::$lib->load->model($cmd[1]);
-				break;	
+				isset(sys::$model->$cmd[1]) ? $obj =& sys::$model->$cmd[1] : $obj =& sys::$lib->load->model($cmd[1]);
+				break;
 		}
+
+		if (empty($cmd[2]))
+		{
+			return $obj;
+		}
+
 		return eval('return sys::$' . implode('->', $cmd) . '(' . implode(', ', $eval_args) . ');');
 	}
 	
@@ -197,6 +201,8 @@ class sys
 				if (isset($object->$name)) continue;
 				$object->$name =& $object_link;
 			}
+
+			$object->config =& sys::$config;
 		}
 		else
 		{
