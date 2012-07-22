@@ -78,9 +78,10 @@ class SYS_Form
 	
 	public function set_field($field, $type, $label = NULL, $rules = NULL, $options = NULL)
 	{
-		if ($type)  $this->set_type($field, $type);
-		if ($label) $this->set_label($field, $label);
-		if ($rules) $this->set_rules($field, $rules);
+		if ($type)    $this->set_type($field, $type);
+		if ($label)   $this->set_label($field, $label);
+		if ($rules)   $this->set_rules($field, $rules);
+		if ($options) $this->set_options($field, $options);
 	}
 	//--------------------------------------------------------------------------
 	
