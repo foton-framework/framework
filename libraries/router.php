@@ -7,7 +7,8 @@ class SYS_Router
 	//--------------------------------------------------------------------------
 	
 	public $default_component = '';
-	public $db_router = FALSE;
+	public $db_router  = FALSE;  // Depricatred
+	public $ext_router = FALSE;  // Example: "ext.sub.router"
 	
 	
 	//--------------------------------------------------------------------------
@@ -33,7 +34,11 @@ class SYS_Router
 	{	
 		$this->_uri =& sys::load_class('Uri');
 		
-		if ($this->db_router)
+		if ($this->ext_router)
+		{
+			sys::call($this->ext_router, array($this->_uri->segments()));
+		}
+		elseif ($this->db_router)
 		{
 			sys::load_class('Loader', 'load');
 			

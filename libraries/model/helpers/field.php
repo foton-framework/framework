@@ -32,6 +32,10 @@ class SYS_Model_Helpers_Field
 		{
 			$this->_model->fields[$name] = array();
 		}
+		if (empty($this->_model->table))
+		{
+			$this->_model->table = $name;
+		}
 		
 		return $this;
 	}

@@ -162,6 +162,10 @@ class sys
 			case 'com':
 				isset(sys::$com->$cmd[1]) ? $obj =& sys::$com->$cmd[1] : $obj =& sys::$lib->load->component($cmd[1]);
 				break;
+
+			case 'lib':
+				isset(sys::$lib->$cmd[1]) ? $obj =& sys::$lib->$cmd[1] : $obj =& sys::$lib->load->library($cmd[1]);
+				break;
 			
 			case 'ext':
 				isset(sys::$ext->$cmd[1]) ? $obj =& sys::$ext->$cmd[1] : $obj =& sys::$lib->load->extension($cmd[1]);

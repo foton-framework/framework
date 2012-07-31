@@ -33,7 +33,7 @@ class SYS_Template
 		{
 			$_template = $this->template_default;
 		}
-		
+			
 		sys::log(($_template{0} != '/' ? $this->template_folder() . '/' : '') . $_template, SYS_DEBUG, 'Template');
 		
 		$_template_file = sys::validate_file( ($_template{0} == '/' ? $_template : $this->template_path() . $this->template_folder() . '/' . $_template) . TEMPLATE_EXT, TRUE);
@@ -41,7 +41,7 @@ class SYS_Template
 		extract($_data, EXTR_REFS);
 		
 		ob_start();
-		
+
 		require $_template_file;
 		
 		$output = ob_get_clean();
