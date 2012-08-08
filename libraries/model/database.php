@@ -196,7 +196,9 @@ class SYS_Model_Database extends SYS_Model
 		
 		$insert_data = array();
 		
-		foreach ($this->fields[$table] as $field => $opt)
+		$fields = isset($this->fields[$table]['fields']) ? $this->fields[$table]['fields'] : $this->fields[$table];
+
+		foreach ($fields as $field => $opt)
 		{
 			if ($field{0} == '_') continue;
 			
