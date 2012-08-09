@@ -232,7 +232,24 @@ class SYS_Loader
 	
 	public function template($name, $data = array())
 	{
-		return sys::$lib->template->render($name, &$data);
+		$create_cache = FALSE;
+
+		if ($this->_cache_on)
+		{
+			$args = array($name);
+			$cache = $this->load_cache('templates', $args);
+			if ($cache !== FALSE) return $cache;
+			else $create_cache = TRUE;
+		}
+
+		$content = sys::$lib->template->render($name, &$data);
+
+		if ($create_cache)
+		{
+			$this->save_cache('templates', $args, $content);
+		}
+
+		return $content;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -273,7 +290,8 @@ class SYS_Loader
 	public function load_cache($type, $args)
 	{
 		$result = FALSE;
-		$cache_file = sys::$config->sys->cache_dir . $type . '/' . md5(implode(':', $args));
+		$args_str = implode(':', $args);
+		$cache_file = sys::$config->sys->cache_dir . $type . '/' . md5($args_str);
 		
 		if (file_exists($cache_file))
 		{
@@ -286,13 +304,12 @@ class SYS_Loader
 				
 				$this->_cache_on = FALSE;
 				
-				if (DEV_MODE) $result = "<div style='border:1px dashed #F00'>
-					{$result}
-					<div style='clear:both; background:#F00; color:#FFF; float:left; padding:3px; font:normal 10px Arial'>" . (int)($live_time/60) . "min</div>
-				</div>";
+				
 			}
 		}
 		
+		sys::log($type . ': ' . $args_str, SYS_DEBUG, 'CACHE');
+
 		return $result;
 	}
 	

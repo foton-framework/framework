@@ -10,15 +10,41 @@ class SYS_Model_Database extends SYS_Model
 	
 	//--------------------------------------------------------------------------
 	
+	public static $_models = array();
+
+	//--------------------------------------------------------------------------
+	
 	public function __construct()
 	{
 		parent::__construct();
-		
+
+		if ( ! empty(sys::$config->sys->use_model_helper))
+		{
+			// require_once __DIR__ . '/helpers/field' . EXT;
+			$this->set = new SYS_Model_Helpers_Field($this);
+			if (method_exists($this, 'set_fields'))
+			{
+				$this->set_fields();
+			}
+		}
+
 		$this->init();
 		
 		if (isset($this->admin))
 		{
+			if (self::$_models)
+			{
+				foreach (self::$_models as &$obj)
+				{
+					$this->admin->set_actions($obj);
+				}
+				self::$_models = array();
+			}
 			$this->admin->set_actions($this);
+		}
+		else
+		{
+			self::$_models[] =& $this;
 		}
 	}
 	
@@ -170,7 +196,9 @@ class SYS_Model_Database extends SYS_Model
 		
 		$insert_data = array();
 		
-		foreach ($this->fields[$table] as $field => $opt)
+		$fields = isset($this->fields[$table]['fields']) ? $this->fields[$table]['fields'] : $this->fields[$table];
+
+		foreach ($fields as $field => $opt)
 		{
 			if ($field{0} == '_') continue;
 			
