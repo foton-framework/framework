@@ -383,7 +383,6 @@ class sys
 	//TODO: необходимо связать с self::load_class что бы все инклюды классов шли через один метод
 	public static function _autoload($class)
 	{
-		
 		switch (TRUE)
 		{
 			case substr($class, 0, strlen(SYSTEM_CLASS_PREFIX)) == SYSTEM_CLASS_PREFIX:
@@ -449,9 +448,21 @@ class sys
 
 		sys::log($class, SYS_DEBUG, 'Autoload');
 		
-		sys::validate_file($path, TRUE);
-		
-		require_once $path;
+		if (sys::validate_file($path))
+		{
+			require_once $path;
+			return;
+		}
+
+		// try find in ext
+		$path = EXT_PATH . $class . '/' . $folder;
+		if (sys::validate_file($path))
+		{
+			require_once $path;
+			return;
+		}
+
+		sys::error("Autoload class error: class \"{$class}\" not found" );
 	}
 	
 	//--------------------------------------------------------------------------
