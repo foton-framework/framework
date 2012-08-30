@@ -54,6 +54,74 @@ class SYS_Model_Database extends SYS_Model
 	
 	//--------------------------------------------------------------------------
 	
+	public function create_table()
+	{
+		$default_engine  = 'MyISAM';
+		$default_charset = 'utf8';
+
+		$fields = array();
+		$keys   = array();
+		
+		foreach($this->fields[$this->table] as $field => $opt)
+		{
+			$fields[$field] = array();
+			$f = &$fields[$field];
+
+			if (empty($opt['field'])) $opt['field'] = '';
+
+			if (substr($field, -2) == 'id' || $field == 'status' || substr($field, 0, 3) == 'id_')
+			{
+				$keys[$field] = $field == 'id';
+			}
+
+			switch ($opt['field'])
+			{
+				case 'textarea':
+				case 'html':
+					$f['type'] = 'text';
+					break;
+
+				case 'input':
+				case 'file':
+					$size = 255;
+					if (isset($opt['rules']))
+					{
+						preg_match('@max_length\[(\d+)\]@ui', $opt['rules'], $matches);
+						if (isset($matches[1])) $size = $matches[1];
+					}
+					$f['type'] = 'varchar('.$size.')';
+					break;
+				
+				default:
+					$f['type'] = 'int(11)';
+					break;
+			}
+
+			if ( isset($opt['default']))
+			{
+				$f['default'] = $opt['default'];
+			}
+		}
+
+		$query_fields = array();
+
+		foreach ($fields as $field => $opt)
+		{
+			$query_fields[] = "`{$field}` {$opt['type']} NOT NULL" . ($field == 'id' ? ' AUTO_INCREMENT' : '');
+			// . (isset($opt['default']) ? " DEFAULT '{$opt['default']}'" : '');
+		}
+		foreach ($keys as $field => $primary)
+		{
+			$query_fields[] = $primary ? "PRIMARY KEY (`{$field}`)" : "KEY `{$field}` (`{$field}`)";
+		}
+
+		$query  = "CREATE TABLE `{$this->table}` (\n".implode(",\n", $query_fields)."\n) ENGINE={$default_engine} DEFAULT CHARSET={$default_charset};";
+
+		$this->db->query($query);
+	}
+
+	//--------------------------------------------------------------------------
+
 	public function init_form($table = NULL)
 	{
 		$this->load->library('form');

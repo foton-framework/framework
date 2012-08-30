@@ -140,11 +140,6 @@ class SYS_Loader
 			sys::validate_class($com_class, TRUE);
 			
 			sys::$com->$component = new $com_class();
-			
-			if (method_exists(&sys::$com->$component, 'main_init'))
-			{
-				sys::$com->$component->main_init();
-			}
 		}
 		
 		if ($load_only) return sys::$com->$component;

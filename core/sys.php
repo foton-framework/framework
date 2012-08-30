@@ -331,6 +331,11 @@ class sys
 		
 		sys::$lib->load->autoload();
 		
+		if (isset(sys::$ext->admin))
+		{
+			sys::$ext->admin->enable = false;
+		}
+		
 		if ( ! empty(sys::$lib->template->template_404))
 		{
 			die(sys::$lib->load->template(sys::$lib->template->template_404));
@@ -403,6 +408,7 @@ class sys
 			case substr($class, 0, strlen(COMPONENT_CLASS_PREFIX)) == COMPONENT_CLASS_PREFIX:
 				$class  = substr($class, strlen(COMPONENT_CLASS_PREFIX));
 				$folder = COM_FOLDER . '/' . strtolower($class) . '/' . strtolower($class) . COMPONENT_EXT;
+				if ($path == APP_PATH) $path = ROOT_PATH;
 				break;
 				
 			case substr($class, 0, strlen(MODEL_CLASS_PREFIX)) == MODEL_CLASS_PREFIX:
@@ -428,7 +434,7 @@ class sys
 			default:
 				$folder = 'libraries/' . strtolower($class) . EXT;
 		}
-		
+
 		switch ($path)
 		{			
 			case EXT_PATH:

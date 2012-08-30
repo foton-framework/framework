@@ -37,6 +37,12 @@ class SYS_Component
 			$this->init($main_component);
 		}
 		
+		// Main init
+		if ($main_component && method_exists(&sys::$com->$component, 'main_init'))
+		{
+			sys::$com->$component->main_init();
+		}
+
 		$action_method = in_array($method, array('', NULL, FALSE), TRUE) ? 'index' : ACTION_METHOD_PREFIX . $method;
 		$method_result = FALSE;
 		
