@@ -52,6 +52,16 @@ class SYS_Loader
 		if (empty(sys::$model->$model_name))
 		{
 			$model_class = MODEL_CLASS_PREFIX . $model;
+
+			if ( ! class_exists($model_class))
+			{
+				$model_class = EXTENSION_CLASS_PREFIX . $model_class;
+				if ( ! class_exists($model_class))
+				{
+					sys::error('Model not found: ' . $model);
+				}
+			}
+
 			sys::$model->$model_name = new $model_class;
 		}
 		
