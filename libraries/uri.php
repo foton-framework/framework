@@ -75,6 +75,8 @@ class SYS_Uri
 
 		if ($this->uri_string && ! preg_match($uri_regexp, $this->uri_string))
 		{
+			return sys::error_404();
+			
 			$uri_string = strip_tags($this->uri_string);
 			$uri_string = preg_replace('|([^/' . $this->permitted_chars . ']+)|i', '<b style="border:1px solid #FCC; color:red">\1</b>', $uri_string);
 			
