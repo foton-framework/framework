@@ -4,13 +4,15 @@
 
 class h_form
 {
-	public static $current_url = '';
+	public static $current_url  = '';
+	public static $no_end_slash = FALSE;
 	
 	//--------------------------------------------------------------------------
 	
 	public static function _exec()
 	{
-		self::$current_url = '/' . sys::$lib->uri->uri_string();
+		self::$no_end_slash = isset(sys::$config->uri->no_end_slash) ? sys::$config->uri->no_end_slash : FALSE;
+		self::$current_url  = '/' . sys::$lib->uri->uri_string();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -23,7 +25,7 @@ class h_form
 		{
 			
 		}
-		elseif (preg_match('/[^\/]$/i', $action))
+		elseif (!self::$no_end_slash && preg_match('/[^\/]$/i', $action))
 		{
 			$action .= '/';
 		}
