@@ -462,7 +462,7 @@ class sys
 			return;
 		}
 
-		sys::error("Autoload class error: class \"{$class}\" not found" );
+		// sys::error("Autoload class error: class \"{$class}\" not found" );
 	}
 	
 	//--------------------------------------------------------------------------

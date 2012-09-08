@@ -45,7 +45,7 @@ class SYS_Loader
 	
 	//--------------------------------------------------------------------------
 	
-	public function &model($model)
+	public function &model($model, $strikt = TRUE)
 	{
 		$model_name = strtolower($model);
 		
@@ -58,7 +58,14 @@ class SYS_Loader
 				$model_class = EXTENSION_CLASS_PREFIX . $model_class;
 				if ( ! class_exists($model_class))
 				{
-					sys::error('Model not found: ' . $model);
+					if ($strikt)
+					{
+						sys::error('Model not found: ' . $model);
+					}
+					else
+					{
+						return $strikt;
+					}
 				}
 			}
 
