@@ -349,7 +349,6 @@ class SYS_Loader
 	
 	public function load_all($type, $path)
 	{
-		
 		if ( ! method_exists(&$this, $type)) return;
 		
 		$dh = opendir($path);

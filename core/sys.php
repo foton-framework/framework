@@ -58,6 +58,11 @@ class sys
 		{
 			date_default_timezone_set(sys::$config->sys->timezone);
 		}
+
+		if ( ! empty(sys::$config->sys->load_ext_config))
+		{
+			sys::load_ext_config();
+		}
 	}
 	
 	//--------------------------------------------------------------------------

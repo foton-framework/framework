@@ -7,8 +7,9 @@ class SYS_Router
 	//--------------------------------------------------------------------------
 	
 	public $default_component = '';
-	public $db_router  = FALSE;  // Depricatred
-	public $ext_router = FALSE;  // Example: "ext.sub.router"
+	public $rules             = array();
+	public $db_router         = FALSE;  // Depricatred
+	public $ext_router        = FALSE;  // Example: "ext.sub.router"
 	
 	
 	//--------------------------------------------------------------------------
