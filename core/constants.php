@@ -41,5 +41,6 @@ define('TEMPLATE_EXT' , '.tpl'   . EXT);
 define('HELPER_EXT'   , '.hlp'   . EXT);
 define('EXTENSION_EXT', '.ext'   . EXT);
 define('MODEL_EXT'    , '.model' . EXT);
+define('CONFIG_EXT'   , '.conf'  . EXT);
 
 //--------------------------------------------------------------------------

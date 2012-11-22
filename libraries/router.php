@@ -13,6 +13,7 @@ class SYS_Router
 	
 	//--------------------------------------------------------------------------
 	
+	private $path      = COM_PATH;
 	private $component = '';
 	private $method    = '';
 	private $arguments = array();
@@ -31,7 +32,7 @@ class SYS_Router
 	//--------------------------------------------------------------------------
 	
 	public function _exec()
-	{	
+	{
 		$this->_uri =& sys::load_class('Uri');
 		
 		if ($this->ext_router)
@@ -57,6 +58,30 @@ class SYS_Router
 		else
 		{
 			$this->set_request($this->_uri->segments());
+			$this->set_rules();
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	
+	public function set_rules()
+	{
+		$uri_string = $this->_uri->uri_string();
+		
+		foreach ($this->rules as $key => $rule)
+		{
+			if ($key == substr($uri_string, 0, strlen($key)))
+			{
+				$segments = explode('/', substr($uri_string, strlen($key) + 1));
+				
+				if (isset($rule['path'])) $this->set_path($rule['path']);
+				if (isset($rule['component'])) $this->set_component($rule['component']);
+				else $this->set_method(array_shift($segments));
+				if (isset($rule['method'])) $this->set_method($rule['method']);
+				else $this->set_method(array_shift($segments));
+				if (isset($rule['arguments'])) $this->set_arguments($rule['arguments']);
+				else $this->set_arguments($segments);
+			}
 		}
 	}
 	
@@ -73,6 +98,20 @@ class SYS_Router
 		$this->set_component(array_shift(&$segments));
 		$this->set_method(array_shift(&$segments));
 		$this->set_arguments($segments);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function set_path($path)
+	{
+		$this->path = strval($path);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function path()
+	{
+		return $this->path;
 	}
 	
 	//--------------------------------------------------------------------------

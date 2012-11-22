@@ -112,6 +112,7 @@ class SYS_Loader
 				$component   = $this->_router->component();
 				$exec_method = $this->_router->method();
 				$arguments   = $this->_router->arguments();
+				$com_path    = $this->_router->path();
 				$main_component  = TRUE;
 				$_main_component = $component;
 				break;
@@ -268,6 +269,12 @@ class SYS_Loader
 	
 	public function &extension($extension)
 	{
+		if ($extension == '*')
+		{
+			$this->load_all('extension', EXT_PATH);
+			return $null;
+		}
+		
 		$ext_lower = strtolower($extension);
 		
 		if (isset(sys::$ext->$ext_lower))
@@ -336,6 +343,25 @@ class SYS_Loader
 		$this->_cache_on = FALSE;
 		
 		sys::log('Save: ' . $type . ' - ' . implode(',', $args), 'DEBUG', 'Cache');
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function load_all($type, $path)
+	{
+		
+		if ( ! method_exists(&$this, $type)) return;
+		
+		$dh = opendir($path);
+		while ($file = readdir($dh))
+		{
+			if (preg_match('/^[\w]/i', $file) && is_dir($path . $file))
+			{
+				call_user_func_array(array(&$this, $type), array($file));
+			}
+		}
+		closedir($dh);
+		
 	}
 	
 	//--------------------------------------------------------------------------

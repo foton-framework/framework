@@ -62,21 +62,41 @@ class sys
 	
 	//--------------------------------------------------------------------------
 	
-	public static function load_config($name)
+	public static function load_config($name, $path = NULL)
 	{
 		static $config;
 		
-		sys::log($name, SYS_DEBUG, 'Config');
+		sys::log($name . ($path ? ', ' . $path : ''), SYS_DEBUG, 'Config');
 		
+		$path = $path ? $path : APP_PATH . 'configs/';
+
 		if ($config === NULL)
 		{
 			$config = new stdClass();
 			sys::$config =& $config;
 		}
 		
-		$file = sys::validate_file(APP_PATH . 'configs/' . $name . EXT, TRUE);
+		$ext  = defined('CONFIG_EXT') ? CONFIG_EXT : EXT;
+		$file = sys::validate_file($path . $name . $ext, TRUE);
 		
 		require_once $file;
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public static function load_ext_config()
+	{
+		if ( ! sys::$config->sys->load_ext_config) return;
+		
+		$dh = opendir(EXT_PATH);
+		while ($file = readdir($dh))
+		{
+			if (is_dir(EXT_PATH . $file) && file_exists(EXT_PATH . $file . '/autoload'. CONFIG_EXT))
+			{
+				sys::load_config('autoload', EXT_PATH . $file . '/');
+			}
+		}
+		closedir($dh);
 	}
 	
 	//--------------------------------------------------------------------------

@@ -16,7 +16,7 @@ class SYS_Database_Driver
 
 	public function db_close()
 	{
-		mysql_close($this->dbr);
+		@mysql_close($this->dbr);
 	}
 
 	//--------------------------------------------------------------------------
