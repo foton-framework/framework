@@ -41,6 +41,7 @@ define('EXT', '.' . pathinfo(__FILE__, PATHINFO_EXTENSION));
 //--------------------------------------------------------------------------
 
 require_once SYS_PATH . 'core/constants' . EXT;
+require_once SYS_PATH . 'core/common' . EXT;
 require_once SYS_PATH . 'core/sys' . EXT;
 
 //--------------------------------------------------------------------------

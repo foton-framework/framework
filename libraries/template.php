@@ -23,6 +23,8 @@ class SYS_Template
 		sys::set_base_objects(&$this);
 		
 		$this->set_template_path(TPL_PATH);
+
+		$this->template =& $this;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -140,37 +142,61 @@ class SYS_Template
 	
 	//--------------------------------------------------------------------------
 	
-	public function &title($val = NULL, $replace = FALSE)
-	{
-		return $this->_val('title', $val, $replace);
-	}
+	// public function &title($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('title', $val, $replace);
+	// }
+	
+	// //--------------------------------------------------------------------------
+	
+	// public function h1($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('h1', $val, $replace);
+	// }
+	
+	// //--------------------------------------------------------------------------
+	
+	// public function message($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('message', $val, $replace);
+	// }
+	
+	// //--------------------------------------------------------------------------
+	
+	// public function error($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('error', $val, $replace);
+	// }
+	
+	// //--------------------------------------------------------------------------
+	
+	// public function info($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('info', $val, $replace);
+	// }
+
+	// //--------------------------------------------------------------------------
+	
+	// public function meta_description($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('meta_description', $val, $replace);
+	// }
+
+	// //--------------------------------------------------------------------------
+	
+	// public function meta_keywords($val = NULL, $replace = FALSE)
+	// {
+	// 	return $this->_val('meta_description', $val, $replace);
+	// }
 	
 	//--------------------------------------------------------------------------
 	
-	public function h1($val, $replace = FALSE)
+	public function __call($name, $args)
 	{
-		return $this->_val('h1', $val, $replace);
-	}
-	
-	//--------------------------------------------------------------------------
-	
-	public function message($val, $replace = FALSE)
-	{
-		return $this->_val('message', $val, $replace);
-	}
-	
-	//--------------------------------------------------------------------------
-	
-	public function error($val, $replace = FALSE)
-	{
-		return $this->_val('error', $val, $replace);
-	}
-	
-	//--------------------------------------------------------------------------
-	
-	public function info($val, $replace = FALSE)
-	{
-		return $this->_val('info', $val, $replace);
+		$value   = isset($args[0]) ? $args[0] : NULL;
+		$replace = isset($args[1]) ? $args[1] : FALSE;
+
+		return $this->_val($name, $value, $replace);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -182,7 +208,7 @@ class SYS_Template
 			return $this->$name;
 		}
 		
-		if ( ! $this->$name || $replace) $this->$name = $val;
+		if ( empty($this->$name) || $replace) $this->$name = $val;
 		
 		return $this;
 	}
