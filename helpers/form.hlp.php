@@ -12,7 +12,7 @@ class h_form
 	public static function _exec()
 	{
 		self::$no_end_slash = isset(sys::$config->uri->no_end_slash) ? sys::$config->uri->no_end_slash : FALSE;
-		self::$current_url  = '/' . sys::$lib->uri->uri_string();
+		self::$current_url  = sys::$config->sys->base_url . sys::$lib->uri->uri_string();
 	}
 	
 	//--------------------------------------------------------------------------
