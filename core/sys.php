@@ -47,7 +47,7 @@ class sys
 	
 	//--------------------------------------------------------------------------
 	
-	public function post_config_init()
+	public static function post_config_init()
 	{
 		if ( ! empty(sys::$config->sys->encoding))
 		{
@@ -77,7 +77,7 @@ class sys
 
 		if ($config === NULL)
 		{
-			$config = new stdClass();
+			$config = new SYS_Config();
 			sys::$config =& $config;
 		}
 		
@@ -162,7 +162,7 @@ class sys
 		
 		sys::$lib->$object_name = new $class_name();
 		
-		if (method_exists(&sys::$lib->$object_name, '_exec'))
+		if (method_exists(sys::$lib->$object_name, '_exec'))
 		{
 			sys::$lib->$object_name->_exec();
 		}
@@ -393,13 +393,24 @@ class sys
 		{
 			return;
 		}
+
+		$html_errors = (bool)ini_get("html_errors");
 		
 		$file = str_replace(ROOT_PATH, '', $file);
 		
 		sys::log("{$message}<br>File: {$file} (Line: {$line})", SYS_PHP, $severity);
 		
-		if (FF_DEBUG || FF_DEVMODE) echo "<div style='background:#FEE;border:2px solid #C33; padding:3px; margin:5px; font:normal 11px \"Trebuchet MS\",sans-serif'><b>PHP ERROR:</b> {$message}<br>{$file} (Line: {$line})</div>";
-		
+		if (FF_DEBUG || FF_DEVMODE)
+		{
+			if ($html_errors)
+			{
+				echo "<div style='background:#FEE;border:2px solid #C33; padding:3px; margin:5px; font:normal 11px \"Trebuchet MS\",sans-serif'><b>PHP ERROR:</b> {$message}<br>{$file} (Line: {$line})</div>";
+			}
+			else
+			{
+				echo "\n[PHP ERROR]: {$message} ({$file} : {$line}) ";
+			}
+		}
 //		exit;
 	}
 	

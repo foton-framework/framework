@@ -21,7 +21,7 @@ class SYS_Loader
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'load');
+		sys::set_config_items($this, 'load');
 	}
 	
 	//--------------------------------------------------------------------------
@@ -169,17 +169,17 @@ class SYS_Loader
 		switch (TRUE)
 		{
 			// com->_exec($method, $arguments, $main_controller)
-			case method_exists(&sys::$com->$component, '_exec'):
+			case method_exists(sys::$com->$component, '_exec'):
 				call_user_func_array(array(&sys::$com->$component, '_exec'), array($component, $exec_method, $arguments, $main_component, $com_path));
 				break;
 			
 			// com->{$method}($arg1, $arg2, ...)
-			case $exec_method && method_exists(&sys::$com->$component, $exec_method):
+			case $exec_method && method_exists(sys::$com->$component, $exec_method):
 				call_user_func_array(array(&sys::$com->$component, $exec_method), $arguments);
 				break;
 			
-			// com->index()	
-			case method_exists(&sys::$com->$component, 'index'):
+			// com->index()
+			case method_exists(sys::$com->$component, 'index'):
 				sys::$com->$component->index();
 				break;
 			
@@ -255,7 +255,7 @@ class SYS_Loader
 			else $create_cache = TRUE;
 		}
 
-		$content = sys::$lib->template->render($name, &$data);
+		$content = sys::$lib->template->render($name, $data);
 
 		if ($create_cache)
 		{
@@ -290,7 +290,7 @@ class SYS_Loader
 		
 		sys::$ext->$ext_lower = new $class_name();
 		
-		sys::set_base_objects(&sys::$ext->$ext_lower, $ext_lower);
+		sys::set_base_objects(sys::$ext->$ext_lower, $ext_lower);
 		
 		return sys::$ext->$ext_lower;
 	}
@@ -349,7 +349,7 @@ class SYS_Loader
 	
 	public function load_all($type, $path)
 	{
-		if ( ! method_exists(&$this, $type)) return;
+		if ( ! method_exists($this, $type)) return;
 		
 		$dh = opendir($path);
 		while ($file = readdir($dh))
@@ -374,7 +374,7 @@ class SYS_Loader
 
 		foreach($this->autoload as $type => $autoload)
 		{
-			if ( ! method_exists(&$this, $type)) continue;
+			if ( ! method_exists($this, $type)) continue;
 			
 			foreach($autoload as $load_params)
 			{

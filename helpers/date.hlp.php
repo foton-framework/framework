@@ -1,4 +1,5 @@
-<?php
+<?php defined('EXT') OR die('No direct script access allowed');
+
 
 
 class h_date

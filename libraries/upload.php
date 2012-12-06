@@ -1,4 +1,4 @@
-<?php
+<?php defined('EXT') OR die('No direct script access allowed');
 
 
 class SYS_Upload
@@ -108,7 +108,7 @@ class SYS_Upload
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'upload');
+		sys::set_config_items($this, 'upload');
 	}
 	
 	//--------------------------------------------------------------------------

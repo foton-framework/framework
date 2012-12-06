@@ -1,4 +1,4 @@
-<?php
+<?php defined('EXT') OR die('No direct script access allowed');
 
 
 class SYS_Model_Database extends SYS_Model

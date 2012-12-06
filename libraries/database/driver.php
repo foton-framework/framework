@@ -1,4 +1,4 @@
-<?php
+<?php defined('EXT') OR die('No direct script access allowed');
 
 
 if (empty(sys::$config->db['driver']))

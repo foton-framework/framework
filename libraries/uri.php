@@ -16,7 +16,7 @@ class SYS_Uri
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'uri');
+		sys::set_config_items($this, 'uri');
 	}
 	
 	//--------------------------------------------------------------------------

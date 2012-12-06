@@ -18,9 +18,9 @@ class SYS_Template
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'template');
+		sys::set_config_items($this, 'template');
 		
-		sys::set_base_objects(&$this);
+		sys::set_base_objects($this);
 		
 		$this->set_template_path(TPL_PATH);
 

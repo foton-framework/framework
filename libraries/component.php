@@ -14,11 +14,11 @@ class SYS_Component
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'component');
+		sys::set_config_items($this, 'component');
 		
 		sys::$lib->load->autoload();
 		
-		sys::set_base_objects(&$this);
+		sys::set_base_objects($this);
 	}
 	
 	//--------------------------------------------------------------------------

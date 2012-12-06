@@ -1,4 +1,4 @@
-<?php defined('EXT') OR die('No direct script access allowed');
+<?php
 
 //--------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-<?php
+<?php defined('EXT') OR die('No direct script access allowed');
 
 
 
@@ -27,14 +27,21 @@ class SYS_Database extends SYS_Database_Driver
 			'charset'  => ''
 		)
 	);
+
 	//--------------------------------------------------------------------------
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'db');
-
+		sys::set_config_items($this, 'db');
+		
+		$this->init();
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function init()
+	{
 		$this->set_group();
-
 		$this->db_connect();
 		$this->db_select();
 		$this->db_set_charset();

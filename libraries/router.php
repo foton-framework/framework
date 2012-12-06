@@ -27,7 +27,7 @@ class SYS_Router
 	
 	public function __construct()
 	{
-		sys::set_config_items(&$this, 'router');
+		sys::set_config_items($this, 'router');
 	}
 	
 	//--------------------------------------------------------------------------
@@ -96,8 +96,8 @@ class SYS_Router
 			return;
 		}
 		
-		$this->set_component(array_shift(&$segments));
-		$this->set_method(array_shift(&$segments));
+		$this->set_component(array_shift($segments));
+		$this->set_method(array_shift($segments));
 		$this->set_arguments($segments);
 	}
 	
