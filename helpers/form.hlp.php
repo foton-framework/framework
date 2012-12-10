@@ -246,10 +246,10 @@ class h_form
 	//--------------------------------------------------------------------------
 	//--------------------------------------------------------------------------
 	
-	public static function value($name, $safe = TRUE)
+	public static function value($name, $default = NULL, $escape = TRUE)
 	{
-		if ( ! isset($_POST[$name])) return;
-		return $safe ? htmlspecialchars($_POST[$name], ENT_QUOTES) : $_POST[$name];
+		$value = isset($_POST[$name]) ? $_POST[$name] : $default;
+		return $escape ? htmlspecialchars($value, ENT_QUOTES) : $value;
 	}
 
 	//--------------------------------------------------------------------------

@@ -174,7 +174,6 @@ class sys
 	
 	//--------------------------------------------------------------------------
 	
-	//TODO: переделать eval() на call_user_func_array()
 	public static function call($cmd, $args = array())
 	{
 		$cmd = explode('.', $cmd);
@@ -206,6 +205,7 @@ class sys
 			return $obj;
 		}
 
+		//TODO: переделать eval() на call_user_func_array()
 		return eval('return sys::$' . implode('->', $cmd) . '(' . implode(', ', $eval_args) . ');');
 	}
 	
@@ -423,8 +423,6 @@ class sys
 		{
 			case substr($class, 0, strlen(SYSTEM_CLASS_PREFIX)) == SYSTEM_CLASS_PREFIX:
 				$class = substr($class, strlen(SYSTEM_CLASS_PREFIX));
-				
-				//TODO: очень некрасиво, но работает
 				sys::load_class($class, FALSE);
 				return;
 				break;
@@ -454,7 +452,6 @@ class sys
 					
 			case substr($class, 0, strlen(HELPER_CLASS_PREFIX)) == HELPER_CLASS_PREFIX:
 				$class = substr($class, strlen(HELPER_CLASS_PREFIX));
-				//TODO: очень некрасиво, но работает
 				sys::$lib->load->helper($class);
 				return;
 				$class  = substr($class, strlen(HELPER_CLASS_PREFIX));
@@ -471,7 +468,7 @@ class sys
 		}
 
 		switch ($path)
-		{			
+		{
 			case EXT_PATH:
 				$path .= strtolower($class) . '/' . $folder;
 				break;

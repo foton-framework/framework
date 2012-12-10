@@ -77,7 +77,6 @@ class SYS_Loader
 	
 	//--------------------------------------------------------------------------
 	
-	//TODO: Optimize file loading
 	public function &database()
 	{
 		if ( ! isset(sys::$config->db['active_class']))
@@ -293,6 +292,20 @@ class SYS_Loader
 		sys::set_base_objects(sys::$ext->$ext_lower, $ext_lower);
 		
 		return sys::$ext->$ext_lower;
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	public function extension_exists($extension)
+	{
+		$ext_lower = strtolower($extension);
+		
+		if (isset(sys::$ext->$ext_lower))
+		{
+			return TRUE;
+		}
+		
+		return sys::validate_file(EXT_PATH . $ext_lower . '/' . $ext_lower . EXTENSION_EXT, FALSE);
 	}
 	
 	//--------------------------------------------------------------------------
