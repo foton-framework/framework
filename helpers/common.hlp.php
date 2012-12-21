@@ -60,8 +60,18 @@ class h_common
 	static function date($time, $format = 'd ?, Y, H:i')
 	{
 		$d = date('YmdHis', time()) - date('YmdHis', $time);
-		if ($d < 60*60*24) return 'Сегодня, ' . date('H:i', $time);
-		elseif ($d < 60*60*24) return 'Вчера, ' . date('H:i', $time);
+		
+		if ($d > 0)
+		{
+			if ($d < 60*60*24)
+			{
+				return 'Сегодня, ' . date('H:i', $time);
+			}
+			elseif ($d < 60*60*24)
+			{
+				return 'Вчера, ' . date('H:i', $time);
+			}
+		}
 		$month = array('Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря');
 		return str_replace('?', $month[date('m', $time)-1], date($format, $time));
 	}
