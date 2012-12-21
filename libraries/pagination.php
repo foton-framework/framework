@@ -49,10 +49,10 @@ class SYS_Pagination
 		if ( ! $items) $items = 10;
 		$pages    = ceil($total / $items);
 		
-		if ($cur_page != 1 && $cur_page > $pages) hlp::redirect('/' . $this->opt('url'));
+		if ($cur_page != 1 && $cur_page > $pages) hlp::redirect(sys::$config->sys->base_url . $this->opt('url'));
 		
 		$tpl      = $this->default_template();
-		$link_tpl = str_replace('?', '%d', '/' . $this->opt('url') . $this->opt('link') . $this->opt('_end_slash'));
+		$link_tpl = str_replace('?', '%d', sys::$config->sys->base_url . $this->opt('url') . $this->opt('link') . $this->opt('_end_slash'));
 		
 		if ($pages < 2) return;
 		
@@ -80,7 +80,7 @@ class SYS_Pagination
 			}
 			else
 			{
-				$link = $p == 1 ? '/' . $this->opt('url') : sprintf($link_tpl, $p);
+				$link = $p == 1 ? sys::$config->sys->base_url . $this->opt('url') : sprintf($link_tpl, $p);
 				if ($cur_page == $p) $result .= sprintf($tpl['current_page'], $p);
 				else $result .= sprintf($tpl['page_link'], $link, $p);
 			}
