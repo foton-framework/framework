@@ -4,16 +4,16 @@
 class SYS_Pagination
 {
 	//--------------------------------------------------------------------------
-	
+
 	private $_conf;
 	private $_group = 'default';
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function init($total, $items = 10, $url = NULL, $link = 'page_?.html')
 	{
 		$this->set_opt('_end_slash', '');
-		
+
 		if (is_array($total))
 		{
 			$conf =& $total;
@@ -29,37 +29,37 @@ class SYS_Pagination
 				$url = preg_replace('/'. str_replace('\\?', '\d+', preg_quote($link,'/')).'$/i', '', $url);
 				if ($url{strlen($url)-1} != '/') $url .= '/';
 			}
-			
+
 			$this->set_opt('total', $total);
 			$this->set_opt('url'  , $url);
 			if ($items) $this->set_opt('items', $items);
 			if ($link)  $this->set_opt('link' , $link);
 		}
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function render($group = NULL)
 	{
 		if ($group !== NULL) $this->set_group($group);
-		
+
 		$cur_page = $this->current_page();
 		$total    = $this->opt('total');
 		$items    = $this->opt('items');
 		if ( ! $items) $items = 10;
 		$pages    = ceil($total / $items);
-		
+
 		if ($cur_page != 1 && $cur_page > $pages) hlp::redirect(sys::$config->sys->base_url . $this->opt('url'));
-		
+
 		$tpl      = $this->default_template();
 		$link_tpl = str_replace('?', '%d', sys::$config->sys->base_url . $this->opt('url') . $this->opt('link') . $this->opt('_end_slash'));
-		
+
 		if ($pages < 2) return;
-		
+
 		$max_pages = 12;
 		$r_limit = $cur_page + $max_pages/2;
 		$l_limit = $cur_page - $max_pages/2;
-		
+
 		$result = $tpl['prefix'];
 		$_sd_a = $tpl['space_divider'];
 		$_sd_b = $tpl['space_divider'];
@@ -88,41 +88,46 @@ class SYS_Pagination
 		$result .= $tpl['suffix'];
 		return $result;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function current_page()
 	{
 		static $cur_page;
-		
+
 		$uri_string = sys::$lib->uri->uri_string();
 		$uri_mask   = '/' . str_replace('\?', '(\d+)', preg_quote($this->opt('url') . $this->opt('link'), '/')) . '/i';
-		
+
 		preg_match($uri_mask, $uri_string, $matches);
-		
+
 		return isset($matches[1]) && $matches[1]>0 ? $matches[1] : 1;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function set_db_limit()
 	{
 		$cur_page = $this->current_page();
 		$items    = $this->opt('items');
 		sys::$lib->db->limit(($cur_page-1) * $items, $items);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function set_total($total)
 	{
 		$this->set_opt('total', $total);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function default_template()
 	{
+		if (isset(sys::$config->pagination) && ! empty(sys::$config->pagination->template))
+		{
+			return sys::$config->pagination->template;
+		}
+
 		return array(
 			'prefix'        => '<div class="pagination">',
 			'suffix'        => '</div>',
@@ -135,34 +140,34 @@ class SYS_Pagination
 			'space_divider' => '<span>...</span>'
 		);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function set_opt($opt_key, $value)
 	{
 		$this->_conf[$this->group()][$opt_key] = $value;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function opt($opt_key)
 	{
 		return $this->_conf[$this->group()][$opt_key];
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function set_group($group = 'default')
 	{
 		$this->_group = $group;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function group()
 	{
 		return $this->_group;
 	}
-	
+
 	//--------------------------------------------------------------------------
 }
