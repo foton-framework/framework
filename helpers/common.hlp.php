@@ -4,9 +4,42 @@
 
 class h_common
 {
-	
+
 	//--------------------------------------------------------------------------
-	
+
+	static function transform2array($array, $key, $fields = NULL)
+	{
+		$result = array();
+
+		if ( ! $fields)
+		{
+			$fields = $key;
+			$key    = FALSE;
+		}
+
+		$fields    = (array)$fields;
+		$is_simple = count($fields) == 1;
+
+		foreach ($array as $i=>$row)
+		{
+			$k = $key ? $row->$key : $i;
+			if ($is_simple)
+			{
+				$data = $row->$fields[0];
+			}
+			else
+			{
+				$data = array();
+				foreach ($fields as $f) $data[$f] = $row->$f;
+			}
+			$result[$k] = $data;
+		}
+
+		return $result;
+	}
+
+	//--------------------------------------------------------------------------
+
 	static function redirect($url, $_301 = FALSE)
 	{
 		ob_get_level() && ob_clean();
@@ -14,9 +47,9 @@ class h_common
 		header("Location: {$url}");
 		exit;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	static function redirect_back()
 	{
 		$back_link    = preg_replace('/^(https?:\/\/'.preg_quote($_SERVER['HTTP_HOST'], '/').')?\/*(.*?)\/*$/i', '$2', self::back_link());
@@ -26,16 +59,16 @@ class h_common
 		elseif($back_link != '/') $back_link = '/' . $back_link . '/';
 		self::redirect($back_link);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	static function back_link()
 	{
 		return htmlspecialchars(empty($_POST['back_link']) ? (empty($_SERVER['HTTP_REFERER']) ? '/' : $_SERVER['HTTP_REFERER']) : $_POST['back_link']);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	static function cut_text($text, $length = 300)
 	{
 		$text = strip_tags($text, '');
@@ -54,13 +87,13 @@ class h_common
 			return $text;
 		}
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	static function date($time, $format = 'd ?, Y, H:i')
 	{
 		$d = date('YmdHis', time()) - date('YmdHis', $time);
-		
+
 		if ($d > 0)
 		{
 			if ($d < 60*60*24)
@@ -75,20 +108,20 @@ class h_common
 		$month = array('Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря');
 		return str_replace('?', $month[date('m', $time)-1], date($format, $time));
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	static function nicetime($timestamp, $detailLevel = 1)
 	{
 		$periods = array("секунд", "минут", "часов", "дней", "недель", "месяцев", "лет", "десятилетий");
 		$lengths = array("60", "60", "24", "7", "4.35", "12", "10");
 		$now = time();
-		
+
 		// check validity of date
 		if(empty($timestamp)) return;
-		
-		
-		
+
+
+
 		// is it future date or past date
 		if($now > $timestamp)
 		{
@@ -100,19 +133,19 @@ class h_common
 			$difference = $timestamp - $now;
 			$tense = "from now";
 		}
-		
+
 		if ($difference == 0)
 		{
 			return "1 секунда назад";
 		}
-		
+
 		$remainders = array();
 		for($j = 0; $j < count($lengths); $j++)
 		{
 			$remainders[$j] = floor(fmod($difference, $lengths[$j]));
 			$difference = floor($difference / $lengths[$j]);
 		}
-		
+
 		$difference = round($difference);
 		$remainders[] = $difference;
 		$string = "";
@@ -126,17 +159,17 @@ class h_common
 				if ($detailLevel <= 0) break;
 			}
 		}
-		
+
 		return $string . $tense;
 	}
-	
-	
+
+
 	//--------------------------------------------------------------------------
-	
-	static function translit($str) 
+
+	static function translit($str)
 	{
 		static $valid_chars;
-		
+
 		$tr = array(
 			"А"=>"a","Б"=>"b","В"=>"v","Г"=>"g",
 			"Д"=>"d","Е"=>"e","Ж"=>"j","З"=>"z","И"=>"i",
@@ -152,16 +185,16 @@ class h_common
 			"ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"y",
 			"ы"=>"y","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya","'"=>"","ё"=>"yo","Ё"=>"yo"
 		);
-		
+
 		if ( ! $valid_chars)
 		{
 			$valid_chars = preg_quote(implode('', $tr), '/');
 		}
-		
+
 		$str = strtr($str, $tr);
 		$str = preg_replace("/[^a-z0-9()]+/i", '-', $str);
 		$str = preg_replace('/^-?(.*?)-?$/i', '\1', $str);
-		
+
 		return strtolower($str);
 	}
 
