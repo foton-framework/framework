@@ -47,8 +47,8 @@ class SYS_Form
 		'alpha_dash'    => 'Поле %s может содержать только символы алфавита и цифры, подчеркивания и тире.',
 		'integer'       => 'Поле %s должно содержать целое число.',
 		'numeric'       => 'Поле %s должно содержать только цифры.',
-        'no_tags'		=> 'Поле %s не должно содержать теги.',
-        'no_hook'		=> 'Поле %s не должно содержать квадратные скобки "[" или "]".',			
+		'no_tags'		=> 'Поле %s не должно содержать теги.',
+		'no_hook'		=> 'Поле %s не должно содержать квадратные скобки "[" или "]".',			
 		'callback'      => 'Callback error',
 		'translit'      => 'Translit error',
 		'unique'        => 'Значение поля %s не уникально!',
@@ -629,23 +629,25 @@ class SYS_Form
 	
 	//--------------------------------------------------------------------------
 	
-    public function r_no_tags($val, $opt) {
-        if (strip_tags($val) <> $val) {
-            return FALSE;
-        }
-
-        return TRUE;
-    }
+	public function r_no_tags($val, $opt) 
+	{
+		if (strip_tags($val) <> $val) {
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
 
     //--------------------------------------------------------------------------
 
-    public function r_no_hook($val, $opt) {
-        if ((strpos($val, ']') === false) && (strpos($val, '[') === false)) {
-            return TRUE;
-        }
+	public function r_no_hook($val, $opt) 
+	{
+		if ((strpos($val, ']') === false) && (strpos($val, '[') === false)) {
+			return TRUE;
+		}
 
-        return FALSE;
-    }	
+		return FALSE;
+	}
 	
 	//--------------------------------------------------------------------------	
 	
