@@ -1,0 +1,7 @@
+{
+    "name": "foton/framework",
+    "type": "foton-core",
+    "require": {
+        "composer/installers": "*"
+    }
+}
