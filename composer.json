@@ -1,0 +1,21 @@
+{
+    "name":    "foton/framework",
+    "version": "1.0.0",
+    "type":    "foton-core",
+    "license":  "MIT",
+    "require": {
+    	"foton/installer": "*"
+    },
+    "repositories": [
+		{
+	        "url": "/Users/zb3k/Sites/foton.dev/installer/",
+			"type": "git"
+	    }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}
