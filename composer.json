@@ -1,6 +1,5 @@
 {
     "name":    "foton/framework",
-    "version": "1.0.0",
     "type":    "foton-core",
     "license":  "MIT",
     "require": {
