@@ -1,6 +1,7 @@
 {
     "name": "foton/framework",
     "type": "foton-core",
+    "version": "1.0.0",
     "require": {
         "foton/installer": "*"
     },
