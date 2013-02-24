@@ -3,5 +3,11 @@
     "type": "foton-core",
     "require": {
         "foton/installer": "*"
-    }
+    },
+    "repositories": [
+        {
+        	"url": "/Users/zb3k/Sites/foton.dev/installer",
+            "type": "git"
+        }
+    ]
 }
