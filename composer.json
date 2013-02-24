@@ -2,13 +2,6 @@
     "name":    "foton/framework",
     "type":    "foton-core",
     "license":  "MIT",
-
-    "repositories": [
-		{
-	        "url": "/Users/zb3k/Sites/foton.dev/installer/",
-			"type": "git"
-	    }
-    ],
     "require": {
     	"foton/installer": "*"
     },
