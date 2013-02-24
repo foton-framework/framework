@@ -38,7 +38,7 @@ class SYS_Template
 			
 		sys::log(($_template{0} != '/' ? $this->template_folder() . '/' : '') . $_template, SYS_DEBUG, 'Template');
 		
-		$_template_file = sys::validate_file( ($_template{0} == '/' ? $_template : $this->template_path() . $this->template_folder() . '/' . $_template) . TEMPLATE_EXT, TRUE);
+		$_template_file = sys::validate_file( ( (($_template{0} == '/') or ($_template{3} == '/')) ? $_template : $this->template_path() . $this->template_folder() . '/' . $_template) . TEMPLATE_EXT, TRUE);
 		
 		extract($_data, EXTR_REFS);
 		
