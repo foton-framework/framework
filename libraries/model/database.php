@@ -4,16 +4,17 @@
 class SYS_Model_Database extends SYS_Model
 {
 	//--------------------------------------------------------------------------
-	
-	public $table  = '';
-	public $fields = array();
-	
+
+	public $table       = '';
+	public $fields      = array();
+	public $primary_key = 'id';
+
 	//--------------------------------------------------------------------------
-	
+
 	public static $_models = array();
 
 	//--------------------------------------------------------------------------
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -29,7 +30,7 @@ class SYS_Model_Database extends SYS_Model
 		}
 
 		$this->init();
-		
+
 		if (isset($this->admin))
 		{
 			if (self::$_models)
@@ -47,13 +48,35 @@ class SYS_Model_Database extends SYS_Model
 			self::$_models[] =& $this;
 		}
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
+	public function &__call($key, $args)
+	{
+		if ($this->field($key))
+		{
+			$this->db->where_in($this->table.'.'.$key, $args);
+		}
+		else {
+			sys::error('UNKNOWN_FIELD', array('field'=>$key, 'model'=>get_class($this)));
+		}
+
+		return $this;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public function field($key)
+	{
+		return isset($this->fields[$this->table][$key]) ? $this->fields[$this->table][$key] : NULL;
+	}
+
+	//--------------------------------------------------------------------------
+
 	public function init() {}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function create_table()
 	{
 		$default_engine  = 'MyISAM';
@@ -61,7 +84,7 @@ class SYS_Model_Database extends SYS_Model
 
 		$fields = array();
 		$keys   = array();
-		
+
 		foreach($this->fields[$this->table] as $field => $opt)
 		{
 			$fields[$field] = array();
@@ -91,7 +114,7 @@ class SYS_Model_Database extends SYS_Model
 					}
 					$f['type'] = 'varchar('.$size.')';
 					break;
-				
+
 				default:
 					$f['type'] = 'int(11)';
 					break;
@@ -125,9 +148,9 @@ class SYS_Model_Database extends SYS_Model
 	public function init_form($table = NULL)
 	{
 		$this->load->library('form');
-		
+
 		$table_fields = $table === NULL ? $this->fields : array($table => $this->fields[$table]);
-		
+
 		foreach ($table_fields as $table => $field_list)
 		{
 			foreach ($field_list as $field => $opt)
@@ -140,27 +163,27 @@ class SYS_Model_Database extends SYS_Model
 				{
 					continue;
 				}
-				
+
 				$type    = $opt['field'];
 				$label   = empty($opt['label'])   ? $field : $opt['label'];
 				$rules   = empty($opt['rules'])   ? NULL   : $opt['rules'];
-				
+
 				if ( ! empty($opt['extra'])) $this->form->set_extra($field, $opt['extra']);
-				
+
 				$this->form->set_field($field, $type, $label, $rules);
-				
+
 				if ( ! empty($opt['options']))
 				{
 					$options = $opt['options'];
-					
+
 					if (is_string($options))
 					{
 						$options = $this->$options();
 					}
-					
+
 					$this->form->set_options($field, $options);
 				}
-				
+
 				if (isset($opt['default']))
 				{
 					$this->form->set_value($field, $opt['default']);
@@ -168,56 +191,115 @@ class SYS_Model_Database extends SYS_Model
 			}
 		}
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function set_table($table)
 	{
 		$this->table = $table;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function table()
 	{
 		return $this->table;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
-	public function prepare_row_result(&$row)
+
+	public function prepare_row_result($row)
 	{
 		if ( ! isset($row->admin_buttons) && isset($this->admin))
 		{
 			$row->admin_buttons = $this->admin->row_actions($this, $row);
 		}
-		
+
 		return $row;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function get($table = NULL)
 	{
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		return $this->db->get($table);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
+	public function result($result_key = NULL, $result_fields = NULL)
+	{
+		$db_result     = $this->get()->result();
+		$model_result  = array();
+		$result_fields = (array)$result_fields;
+		$one2one       = count($result_fields) == 1;
+
+		if ( ! $result_key)
+		{
+			$result_key = $this->primary_key;
+		}
+
+		if (count($db_result))
+		{
+			foreach ($db_result as $row)
+			{
+				$row = $this->prepare_row_result($row);
+
+				if ($result_fields)
+				{
+					if ($one2one)
+					{
+						$model_result[$row->$result_key] = $row->$result_fields[0];
+					}
+					else
+					{
+						foreach ($result_fields as $key)
+						{
+							$model_result[$row->$result_key]->$key = $row->$key;
+						}
+					}
+				}
+				else
+				{
+					$model_result[$row->$result_key] = $row;
+				}
+			}
+		}
+
+		return $model_result;
+	}
+
+	//--------------------------------------------------------------------------
+
+	public function row($key = NULL)
+	{
+		$row = $this->get()->row();
+
+		if ($row)
+		{
+			$row = $this->prepare_row_result($row);
+		}
+
+		return $key ? (isset($row->$key) ? $row->$key : NULL) : $row;
+	}
+
+	//--------------------------------------------------------------------------
+
+	//!DEPRECATED
 	public function get_result($table = NULL)
 	{
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		$result = $this->get($table)->result();
-		
+
 		if (count($result))
 		{
 			foreach ($result as &$row)
@@ -225,12 +307,13 @@ class SYS_Model_Database extends SYS_Model
 				$row = $this->prepare_row_result($row);
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
+	//!DEPRECATED
 	public function get_row($table = NULL, $prepare = TRUE)
 	{
 		if ( ! $table)
@@ -244,32 +327,32 @@ class SYS_Model_Database extends SYS_Model
 		{
 			$row = $this->prepare_row_result($row);
 		}
-		
+
 		return $row;
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function insert($table = NULL, $data = NULL)
 	{
 		if ( ! $data)
 		{
 			$data = $_POST;
 		}
-		
+
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		$insert_data = array();
-		
+
 		$fields = isset($this->fields[$table]['fields']) ? $this->fields[$table]['fields'] : $this->fields[$table];
 
 		foreach ($fields as $field => $opt)
 		{
 			if ($field{0} == '_') continue;
-			
+
 			if (isset($data[$field]))
 			{
 				$insert_data[$field] = $data[$field];
@@ -282,28 +365,28 @@ class SYS_Model_Database extends SYS_Model
 
 		return $this->db->insert($table, $insert_data);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function update($table = NULL, $data = NULL)
 	{
-		
+
 		if ( ! $data)
 		{
 			$data = $_POST;
 		}
-		
+
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		$update_data = array();
 
 		foreach ($this->fields[$table] as $field => $opt)
 		{
 			if ($field{0} == '_') continue;
-			
+
 			if (isset($data[$field]))
 			{
 				$update_data[$field] = $data[$field];
@@ -316,30 +399,30 @@ class SYS_Model_Database extends SYS_Model
 
 		return $this->db->update($table, $update_data);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function delete($table = NULL, $data = NULL)
 	{
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		return $this->db->delete($table, $data);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function count_all($table = NULL)
 	{
 		if ( ! $table)
 		{
 			$table = $this->table;
 		}
-		
+
 		return $this->db->count_all($table);
 	}
-	
+
 	//--------------------------------------------------------------------------
 }
