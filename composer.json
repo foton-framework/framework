@@ -3,7 +3,10 @@
     "type":    "foton-core",
     "license":  "MIT",
     "require": {
-    	"foton/installer": "*"
+    	"foton/installer": "*",
+        "foton/debug": "1.*",
+        "foton/admin": "1.*",
+        "foton/user":  "1.*"
     },
     "extra": {
         "branch-alias": {
