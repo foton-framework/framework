@@ -20,7 +20,6 @@ class sys
 
 		sys::$log[0]['microtime'] = BENCHMARK_START;
 
-
 		sys::$lib   = new stdClass();
 		sys::$ext   = new stdClass();
 		sys::$com   = new stdClass();
@@ -29,6 +28,13 @@ class sys
 
 		spl_autoload_register('sys::_autoload');
 		set_error_handler('sys::_php_error');
+
+		// class_alias() fo php < 5.3
+		if ( ! function_exists('class_alias')) {
+			function class_alias($original, $alias) {
+				eval('abstract class ' . $alias . ' extends ' . $original . ' {}');
+			}
+		}
 
 		if (@get_magic_quotes_gpc())
 		{
@@ -421,6 +427,7 @@ class sys
 	//TODO: необходимо связать с self::load_class что бы все инклюды классов шли через один метод
 	public static function _autoload($class)
 	{
+		$debug = $class == 'EXT_MODEL_users';
 		switch (TRUE)
 		{
 			case substr($class, 0, strlen(SYSTEM_CLASS_PREFIX)) == SYSTEM_CLASS_PREFIX:

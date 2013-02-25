@@ -56,6 +56,7 @@ class SYS_Loader
 			if ( ! class_exists($model_class))
 			{
 				$model_class = EXTENSION_CLASS_PREFIX . $model_class;
+
 				if ( ! class_exists($model_class))
 				{
 					if ($strikt)

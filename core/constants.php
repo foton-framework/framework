@@ -2,8 +2,8 @@
 
 //--------------------------------------------------------------------------
 
-define('FOTON_VERSION', '0.3');
-define('FOTON_VERSION_STATUS', '');
+define('FOTON_VERSION', '1.0.3');
+define('FOTON_VERSION_STATUS', 'dev');
 
 //--------------------------------------------------------------------------
 //   Log levels

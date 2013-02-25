@@ -1,6 +1,55 @@
 <?php defined('EXT') OR die('No direct script access allowed');
 
+//--------------------------------------------------------------------------
 
+function &ext($name)
+{
+	if ( ! isset(sys::$ext->$name))
+	{
+		sys::$lib->load->extension($name);
+	}
+
+	return sys::$ext->$name;
+}
+
+//--------------------------------------------------------------------------
+
+//TODO: реализовать возможность обращаться к методам: com('news/latest/10')
+function &com($name)
+{
+	if ( ! isset(sys::$com->$name))
+	{
+		sys::$lib->load->component($name);
+	}
+
+	return sys::$com->$name;
+}
+
+//--------------------------------------------------------------------------
+
+function &model($name)
+{
+	if ( ! isset(sys::$com->$name))
+	{
+		sys::$lib->load->model($name);
+	}
+
+	return sys::$model->$name;
+}
+
+//--------------------------------------------------------------------------
+
+function &config($key)
+{
+	if ( ! isset(sys::$config->$key))
+	{
+		return NULL;
+	}
+
+	return sys::$config->$key;
+}
+
+//--------------------------------------------------------------------------
 
 function t($key, $file = 'common')
 {
@@ -20,3 +69,5 @@ function t($key, $file = 'common')
 
 	return isset($lang[$file][$key]) ? $lang[$file][$key] : '~'.$key.'~';
 }
+
+//--------------------------------------------------------------------------
