@@ -6,10 +6,10 @@ class SYS_Database extends SYS_Database_Driver
 {
 	public $result_class = 'SYS_Database_Result';
 	public $active_group = 'default';
-	
+
 	public $last_query   = '';
 	public $query_count  = 0;
-	
+
 	public $hostname = '';
 	public $username = '';
 	public $password = '';
@@ -29,16 +29,14 @@ class SYS_Database extends SYS_Database_Driver
 	);
 
 	//--------------------------------------------------------------------------
-	
+
 	public function __construct()
 	{
 		sys::set_config_items($this, 'db');
-		
-		$this->init();
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function init()
 	{
 		$this->set_group();
@@ -64,18 +62,17 @@ class SYS_Database extends SYS_Database_Driver
 	}
 
 	//--------------------------------------------------------------------------
-	
+
 	public function db_connect()
 	{
-
 		parent::db_connect();
-		
+
 		if ( ! $this->dbr)
 		{
 			sys::db_error('cannot_connect_to_database', array('database'=> $this->database, 'hostname' => $this->hostname));
 			exit;
 		}
-		
+
 		sys::log('Hostname: ' . $this->hostname, SYS_DB, 'Connect');
 	}
 
@@ -84,15 +81,15 @@ class SYS_Database extends SYS_Database_Driver
 	public function db_select()
 	{
 		$result = parent::db_select();
-		
+
 		if ( ! $result)
 		{
 			sys::db_error('cannot_select_database', array('database' => $this->database));
 			exit;
 		}
-		
+
 		sys::log('Database: ' . $this->database, SYS_DB, 'Select');
-		
+
 		return $result;
 	}
 
@@ -127,41 +124,46 @@ class SYS_Database extends SYS_Database_Driver
 			$args = func_get_args();
 			$sql  = call_user_func_array(array($this, 'bind'), $args);
 		}
-		
+
 		$result = $this->simple_query($sql);
 
 		$result_class = SYSTEM_CLASS_PREFIX . $this->result_class;
-		
+
 		return new $result_class($result);
 	}
-	
+
 	//--------------------------------------------------------------------------
-	
+
 	public function simple_query($sql, $bind_ = NULL)
 	{
+		if (empty($this->dbr))
+		{
+			$this->init();
+		}
+
 		if ($bind_ !== NULL)
 		{
 			$args = func_get_args();
 			$sql  = call_user_func_array(array($this, 'bind'), $args);
 		}
-		
+
 		$this->last_query = $sql;
-		
+
 		sys::benchmark('DB_A');
 		$result = parent::query($sql);
 		sys::benchmark('DB_B');
-		
+
 		if ($this->error())
 		{
 			sys::db_error('query_error', array('sql' => $sql, 'error' => $this->error_message()));
 			return $result;
 		}
-		
+
 		$this->query_count ++;
 		sys::log($sql, SYS_DB, 'Query: ' . $this->query_count, sys::benchmark('DB_A', 'DB_B'));
-		
+
 		return $result;
 	}
-	
+
 	//--------------------------------------------------------------------------
 }
