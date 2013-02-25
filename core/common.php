@@ -2,8 +2,13 @@
 
 //--------------------------------------------------------------------------
 
-function &ext($name)
+function &ext($name = NULL)
 {
+	if (is_null($name))
+	{
+		return sys::$ext;
+	}
+
 	if ( ! isset(sys::$ext->$name))
 	{
 		sys::$lib->load->extension($name);
@@ -14,8 +19,13 @@ function &ext($name)
 
 //--------------------------------------------------------------------------
 
-function &lib($name)
+function &lib($name = NULL)
 {
+	if (is_null($name))
+	{
+		return sys::$lib;
+	}
+
 	if ( ! isset(sys::$lib->$name))
 	{
 		sys::$lib->load->library($name);
@@ -27,8 +37,13 @@ function &lib($name)
 //--------------------------------------------------------------------------
 
 //TODO: реализовать возможность обращаться к методам: com('news/latest/10')
-function &com($name)
+function &com($name = NULL)
 {
+	if (is_null($name))
+	{
+		return sys::$com;
+	}
+
 	if ( ! isset(sys::$com->$name))
 	{
 		sys::$lib->load->component($name);
@@ -39,8 +54,13 @@ function &com($name)
 
 //--------------------------------------------------------------------------
 
-function &model($name)
+function &model($name = NULL)
 {
+	if (is_null($name))
+	{
+		return sys::$model;
+	}
+
 	if ( ! isset(sys::$com->$name))
 	{
 		sys::$lib->load->model($name);
@@ -51,8 +71,13 @@ function &model($name)
 
 //--------------------------------------------------------------------------
 
-function &config($key)
+function &config($key = NULL)
 {
+	if (is_null($key))
+	{
+		return sys::$config;
+	}
+
 	if ( ! isset(sys::$config->$key))
 	{
 		return NULL;
