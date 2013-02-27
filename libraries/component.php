@@ -82,10 +82,21 @@ class SYS_Component
 
 			$file = ($com_path . $component) . '/views/' . $this->view . VIEW_EXT;
 
-			$parent_class = get_parent_class($this);
-			if (substr($parent_class, 0, strlen(EXTENSION_CLASS_PREFIX)) == EXTENSION_CLASS_PREFIX)
+			// Пробуем загрузить вид из расширения
+			$ext_class = FALSE;
+
+			if (preg_match('@^'.EXTENSION_CLASS_PREFIX.'@', get_parent_class($this)))
 			{
-				$ext = strtolower(substr($parent_class, strlen(EXTENSION_CLASS_PREFIX . COMPONENT_CLASS_PREFIX)));
+				$ext_class = get_parent_class($this);
+			}
+			elseif (preg_match('@^'.EXTENSION_CLASS_PREFIX.'@', get_class($this)))
+			{
+				$ext_class = get_class($this);
+			}
+
+			if ($ext_class)
+			{
+				$ext = strtolower(substr($ext_class, strlen(EXTENSION_CLASS_PREFIX . COMPONENT_CLASS_PREFIX)));
 
 				if ( ! sys::validate_file($file))
 				{

@@ -6,7 +6,11 @@ define('BENCHMARK_START', microtime());
 
 //--------------------------------------------------------------------------
 
-defined('APP_FOLDER') OR define('CRON_MODE', FALSE);
+defined('CRON_MODE') OR define('CRON_MODE', FALSE);
+
+//--------------------------------------------------------------------------
+
+defined('APP_CONFIG') OR define('APP_CONFIG', 'config');
 
 //--------------------------------------------------------------------------
 
@@ -50,12 +54,12 @@ require_once SYS_PATH . 'core/sys' . EXT;
 
 sys::init();
 
-sys::load_config('config');
+sys::load_config(APP_CONFIG);
 
 sys::post_config_init();
 
 sys::load_class('Loader', 'load');
 
-echo sys::$lib->load->component();
+echo lib()->load->component();
 
 //--------------------------------------------------------------------------

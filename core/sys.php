@@ -427,7 +427,6 @@ class sys
 	//TODO: необходимо связать с self::load_class что бы все инклюды классов шли через один метод
 	public static function _autoload($class)
 	{
-		$debug = $class == 'EXT_MODEL_users';
 		switch (TRUE)
 		{
 			case substr($class, 0, strlen(SYSTEM_CLASS_PREFIX)) == SYSTEM_CLASS_PREFIX:

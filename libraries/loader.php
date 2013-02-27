@@ -144,7 +144,15 @@ class SYS_Loader
 
 		if ( ! isset(sys::$com->$component))
 		{
-			$com_file = sys::validate_file($com_path . $component . '/' . $component . COMPONENT_EXT, ! $main_component);
+			$_com_file = $component . '/' . $component . COMPONENT_EXT;
+			$com_file = sys::validate_file($com_path . $_com_file, ! $main_component);
+
+			// try load ext component
+			if ( ! $com_file)
+			{
+				$com_file = sys::validate_file(EXT_PATH . $component . '/components/' . $_com_file, ! $main_component);
+				class_alias(EXTENSION_CLASS_PREFIX . COMPONENT_CLASS_PREFIX . $component, COMPONENT_CLASS_PREFIX . $component);
+			}
 
 			if ( ! $com_file)
 			{
