@@ -61,7 +61,7 @@ function &model($name = NULL)
 		return sys::$model;
 	}
 
-	if ( ! isset(sys::$com->$name))
+	if ( ! isset(sys::$model->$name))
 	{
 		sys::$lib->load->model($name);
 	}
