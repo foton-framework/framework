@@ -6,6 +6,11 @@ define('BENCHMARK_START', microtime());
 
 //--------------------------------------------------------------------------
 
+define('DS',  DIRECTORY_SEPARATOR);
+define('DS_UP',  DS . '..');
+
+//--------------------------------------------------------------------------
+
 defined('CRON_MODE') OR define('CRON_MODE', FALSE);
 
 //--------------------------------------------------------------------------
@@ -22,12 +27,14 @@ defined('EXT_FOLDER') OR define('EXT_FOLDER', 'extensions');
 
 //--------------------------------------------------------------------------
 
-define('ROOT_PATH', realpath(dirname(__FILE__) . '/../../') . '/');
-define('APP_PATH' , realpath(ROOT_PATH . APP_FOLDER) . '/');
-define('COM_PATH' , realpath(ROOT_PATH . COM_FOLDER) . '/');
-define('SYS_PATH' , realpath(ROOT_PATH . SYS_FOLDER) . '/');
-define('EXT_PATH' , realpath(ROOT_PATH . EXT_FOLDER) . '/');
-define('TPL_PATH' , realpath(ROOT_PATH . TPL_FOLDER) . '/');
+define('ROOT_PATH', realpath(dirname(__FILE__) . DS_UP . DS_UP) . DS);
+define('APP_PATH' , realpath(ROOT_PATH . APP_FOLDER) . DS);
+define('COM_PATH' , realpath(ROOT_PATH . COM_FOLDER) . DS);
+define('SYS_PATH' , realpath(ROOT_PATH . SYS_FOLDER) . DS);
+define('EXT_PATH' , realpath(ROOT_PATH . EXT_FOLDER) . DS);
+define('TPL_PATH' , realpath(ROOT_PATH . TPL_FOLDER) . DS);
+
+define('CORE_PATH' , SYS_PATH . 'core' . DS);
 
 //--------------------------------------------------------------------------
 
@@ -44,9 +51,9 @@ define('EXT', '.' . pathinfo(__FILE__, PATHINFO_EXTENSION));
 
 //--------------------------------------------------------------------------
 
-require_once SYS_PATH . 'core/constants' . EXT;
-require_once SYS_PATH . 'core/common' . EXT;
-require_once SYS_PATH . 'core/sys' . EXT;
+require_once CORE_PATH . 'constants' . EXT;
+require_once CORE_PATH . 'common' . EXT;
+require_once CORE_PATH . 'sys' . EXT;
 
 //--------------------------------------------------------------------------
 // TODO: оформить запуск в отдельный класс для возможности его перекрытия через app/hooks
