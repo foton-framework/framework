@@ -39,10 +39,13 @@ class SYS_Database extends SYS_Database_Driver
 
 	public function init()
 	{
-		$this->set_group();
-		$this->db_connect();
-		$this->db_select();
-		$this->db_set_charset();
+		if (empty($this->dbr))
+		{
+			$this->set_group();
+			$this->db_connect();
+			$this->db_select();
+			$this->db_set_charset();
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -136,10 +139,7 @@ class SYS_Database extends SYS_Database_Driver
 
 	public function simple_query($sql, $bind_ = NULL)
 	{
-		if (empty($this->dbr))
-		{
-			$this->init();
-		}
+		$this->init();
 
 		if ($bind_ !== NULL)
 		{

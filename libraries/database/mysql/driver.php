@@ -37,6 +37,7 @@ class SYS_Database_Driver
 
 	public function escape($str)
 	{
+		$this->init();
 		return mysql_real_escape_string($str);
 	}
 
@@ -73,6 +74,6 @@ class SYS_Database_Driver
 	{
 		return mysql_error($this->dbr);
 	}
-	
+
 	//--------------------------------------------------------------------------
 }
