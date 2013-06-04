@@ -275,6 +275,8 @@ class SYS_Upload
 
 	//--------------------------------------------------------------------------
 
+	//--------------------------------------------------------------------------
+
 	public function check_mime($name)
 	{
 		if ( ! $this->allowed_types)
@@ -285,11 +287,19 @@ class SYS_Upload
 
 		$allowed_types = explode('|', $this->allowed_types);
 
+
 		$mimes = array();
 		foreach ($allowed_types as $a_type)
 		{
 			$a_mime = isset($this->mimes[$a_type]) ? $this->mimes[$a_type] : array();
 			is_array($a_mime) ? ($mimes = array_merge($mimes, $a_mime)) : ($mimes[]=$a_mime);
+		}
+		
+		// Check images:
+		if (current(explode('/', $this->file_data['type'])) == 'image')
+		{
+			$info = @getimagesize($this->file_data['tmp_name']);
+			$this->file_data['type'] = $info['mime'];
 		}
 
 		if ( ! in_array($this->file_data['type'], $mimes))
